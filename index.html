@@ -1,0 +1,1350 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Dadu — Front-End Developer</title>
+    <style>
+      :root {
+        --o: #ff6200;
+        --bg: #0b0b0e;
+        --card: rgba(18, 18, 22, 0.82);
+        --line: rgba(255, 255, 255, 0.1);
+        --mut: #a8a8b0;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background: #000;
+        color: #fff;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        line-height: 1.55;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      #bg {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+      }
+      #veil {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(
+          90deg,
+          rgba(0, 0, 0, 0.82),
+          rgba(0, 0, 0, 0.35) 60%,
+          rgba(0, 0, 0, 0.6)
+        );
+      }
+      #bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        width: 0;
+        background: var(--o);
+        z-index: 99;
+      }
+      .w {
+        max-width: 1180px;
+        margin: auto;
+        padding: 0 24px;
+      }
+      nav {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 50;
+        transition: 0.3s;
+      }
+      nav.s {
+        background: rgba(8, 8, 10, 0.88);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--line);
+      }
+      nav .w {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 72px;
+      }
+      .logo {
+        font-weight: 800;
+        letter-spacing: 0.08em;
+      }
+      .logo b {
+        color: var(--o);
+      }
+      .links {
+        display: flex;
+        gap: 26px;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+      }
+      .links a {
+        padding: 6px 0;
+        border-bottom: 2px solid transparent;
+        transition: 0.2s;
+      }
+      .links a:hover,
+      .links a.on {
+        color: var(--o);
+        border-color: var(--o);
+      }
+      .btn {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 12px 22px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        border: 1px solid var(--o);
+        background: var(--o);
+        border-radius: 3px;
+        cursor: pointer;
+        color: #fff;
+        transition: 0.25s;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(255, 98, 0, 0.35);
+      }
+      .btn.g {
+        background: rgba(0, 0, 0, 0.4);
+        border-color: #555;
+      }
+      .btn.g:hover {
+        border-color: var(--o);
+        box-shadow: none;
+      }
+      #burger {
+        display: none;
+        background: none;
+        border: 0;
+        color: #fff;
+        font-size: 26px;
+        cursor: pointer;
+      }
+      section {
+        padding: 90px 0;
+        position: relative;
+      }
+      .panel {
+        background: var(--card);
+        backdrop-filter: blur(8px);
+      }
+      .eb {
+        color: var(--o);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      h2 {
+        font-size: clamp(26px, 3.4vw, 38px);
+        margin: 6px 0 34px;
+        line-height: 1.2;
+      }
+      #home {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding-top: 100px;
+      }
+      .tag {
+        display: inline-block;
+        background: rgba(255, 98, 0, 0.12);
+        color: var(--o);
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        margin-bottom: 18px;
+      }
+      h1 {
+        font-size: clamp(42px, 7vw, 84px);
+        line-height: 1;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+      }
+      h1 em {
+        font-style: normal;
+        color: var(--o);
+      }
+      .lead {
+        max-width: 470px;
+        margin: 26px 0 30px;
+        color: #ddd;
+      }
+      .row {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .soc {
+        display: flex;
+        gap: 12px;
+        margin-top: 14px;
+      }
+      .soc a {
+        width: 38px;
+        height: 38px;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 700;
+        transition: 0.2s;
+      }
+      .soc a:hover {
+        background: var(--o);
+        border-color: var(--o);
+      }
+      .code {
+        position: absolute;
+        right: 24px;
+        top: 18%;
+        width: 300px;
+        border: 1px solid rgba(255, 98, 0, 0.5);
+        border-radius: 12px;
+        background: rgba(10, 10, 12, 0.75);
+        padding: 16px;
+        font:
+          12px/1.7 ui-monospace,
+          Menlo,
+          monospace;
+        color: #ffb27a;
+      }
+      .avail {
+        position: absolute;
+        right: 60px;
+        bottom: 16%;
+        border: 1px solid rgba(255, 98, 0, 0.5);
+        background: rgba(10, 10, 12, 0.75);
+        padding: 12px 20px;
+        font-weight: 800;
+        letter-spacing: 0.05em;
+      }
+      .avail small {
+        display: block;
+        font-weight: 400;
+        font-size: 12px;
+      }
+      .avail i {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: var(--o);
+        border-radius: 50%;
+        margin-left: 6px;
+        animation: p 1.6s infinite;
+      }
+      @keyframes p {
+        50% {
+          opacity: 0.2;
+        }
+      }
+      .scr {
+        position: absolute;
+        bottom: 26px;
+        left: 50%;
+        font-size: 10px;
+        letter-spacing: 0.2em;
+        color: var(--mut);
+        text-align: center;
+      }
+      .scr i {
+        display: block;
+        width: 1px;
+        height: 34px;
+        margin: 8px auto 0;
+        background: linear-gradient(var(--o), transparent);
+        animation: d 1.8s infinite;
+      }
+      @keyframes d {
+        0% {
+          transform: scaleY(0);
+          transform-origin: top;
+        }
+        60% {
+          transform: scaleY(1);
+          transform-origin: top;
+        }
+        100% {
+          transform: scaleY(1);
+          transform-origin: bottom;
+          opacity: 0;
+        }
+      }
+      .g2 {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 50px;
+        align-items: center;
+      }
+      .xp {
+        position: relative;
+        aspect-ratio: 1;
+        max-width: 380px;
+        border: 1px solid var(--o);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 98, 0, 0.25),
+          transparent
+        );
+        display: grid;
+        place-items: center;
+        text-align: center;
+      }
+      .xp b {
+        font-size: 84px;
+        color: var(--o);
+        line-height: 1;
+        display: block;
+      }
+      .xp span {
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        font-size: 13px;
+      }
+      .chk {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px 20px;
+        margin: 20px 0 26px;
+        font-size: 14px;
+      }
+      .chk li {
+        list-style: none;
+      }
+      .chk li:before {
+        content: "✓";
+        color: var(--o);
+        margin-right: 8px;
+        font-weight: 700;
+      }
+      .p {
+        color: #cfcfd4;
+        font-size: 15px;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+        transition: 0.3s;
+      }
+      .card:hover {
+        border-color: var(--o);
+        transform: translateY(-6px);
+        box-shadow: 0 14px 34px rgba(255, 98, 0, 0.15);
+      }
+      .card:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        border: 14px solid transparent;
+        border-top-color: var(--o);
+        border-right-color: var(--o);
+      }
+      .ic {
+        font-size: 30px;
+        color: var(--o);
+        margin-bottom: 10px;
+        font-family: ui-monospace, monospace;
+        font-weight: 700;
+      }
+      .card h3 {
+        font-size: 16px;
+        margin-bottom: 6px;
+      }
+      .card p {
+        color: var(--mut);
+        font-size: 14px;
+      }
+      .tech {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 14px;
+      }
+      .tech div {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 16px 8px;
+        text-align: center;
+        font-size: 13px;
+        transition: 0.25s;
+      }
+      .tech div:hover {
+        border-color: var(--o);
+        transform: translateY(-4px);
+      }
+      .tech b {
+        display: block;
+        font-size: 22px;
+        margin-bottom: 4px;
+      }
+      .sk {
+        margin-top: 26px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 14px;
+        font-size: 14px;
+        color: var(--mut);
+      }
+      .sk strong {
+        color: #fff;
+        display: block;
+      }
+      .hd {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .proj .card {
+        padding: 0;
+      }
+      .proj img {
+        width: 100%;
+        display: block;
+        aspect-ratio: 8/5;
+        object-fit: cover;
+        transition: 0.5s;
+      }
+      .proj .card:hover img {
+        transform: scale(1.05);
+      }
+      .proj .im {
+        overflow: hidden;
+      }
+      .proj .bd {
+        padding: 18px;
+      }
+      .proj {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .proj .card:after {
+        display: none;
+      }
+      .tg {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 12px;
+      }
+      .tg span {
+        font-size: 11px;
+        border: 1px solid var(--line);
+        padding: 2px 9px;
+        border-radius: 4px;
+        color: #ccc;
+      }
+      .nums {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        text-align: center;
+      }
+      .nums div {
+        padding: 10px;
+        border-left: 1px solid var(--line);
+      }
+      .nums div:first-child {
+        border: 0;
+      }
+      .nums b {
+        display: block;
+        font-size: 48px;
+        color: var(--o);
+        line-height: 1.1;
+      }
+      .nums span {
+        color: #ccc;
+        font-size: 14px;
+      }
+      .tl {
+        border-left: 2px solid var(--o);
+        padding-left: 26px;
+        margin-left: 6px;
+      }
+      .tl h3 {
+        font-size: 19px;
+      }
+      .tl .m {
+        color: var(--o);
+        font-size: 13px;
+        margin: 2px 0 12px;
+      }
+      .tl li {
+        color: #cfcfd4;
+        font-size: 14.5px;
+        margin: 0 0 8px 18px;
+      }
+      .edu {
+        margin-top: 30px;
+        color: var(--mut);
+        font-size: 14px;
+      }
+      .edu b {
+        color: #fff;
+      }
+      .sl {
+        position: relative;
+        overflow: hidden;
+      }
+      .tr {
+        display: flex;
+        transition: transform 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+      }
+      .sd {
+        flex: 0 0 100%;
+        padding: 0 52px;
+      }
+      .q {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 28px;
+        max-width: 680px;
+        margin: auto;
+        text-align: center;
+      }
+      .q p {
+        font-size: 17px;
+        margin-bottom: 12px;
+      }
+      .q small {
+        color: var(--o);
+        font-weight: 700;
+      }
+      .ar {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: 1px solid var(--o);
+        color: var(--o);
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        z-index: 2;
+        font-size: 16px;
+        transition: 0.2s;
+      }
+      .ar:hover {
+        background: var(--o);
+        color: #fff;
+      }
+      .dots {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .dots i {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #444;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .dots i.on {
+        background: var(--o);
+        transform: scale(1.3);
+      }
+      .ct {
+        display: grid;
+        grid-template-columns: 1fr 1.1fr;
+        gap: 50px;
+      }
+      .ci {
+        display: grid;
+        gap: 18px;
+        margin-top: 20px;
+      }
+      .ci div {
+        font-size: 14px;
+      }
+      .ci b {
+        display: block;
+        color: var(--o);
+        font-size: 12px;
+        letter-spacing: 0.1em;
+      }
+      form {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: 1fr 1fr;
+      }
+      form .f {
+        grid-column: 1/3;
+      }
+      input,
+      textarea {
+        width: 100%;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        color: #fff;
+        padding: 13px;
+        font: inherit;
+        font-size: 14px;
+        outline: 0;
+        transition: 0.2s;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: var(--o);
+        background: rgba(255, 98, 0, 0.06);
+      }
+      textarea {
+        height: 120px;
+        resize: vertical;
+      }
+      footer {
+        background: rgba(5, 5, 7, 0.3) !important;
+        padding: 40px 0;
+        border-top: 1px solid var(--line);
+        font-size: 13px;
+        color: var(--mut);
+      }
+      footer .w {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 24px;
+      }
+      footer h4 {
+        color: var(--o);
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+      }
+      footer a {
+        display: inline-block;
+        margin-right: 14px;
+      }
+      footer a:hover {
+        color: var(--o);
+      }
+      #top {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        width: 42px;
+        height: 42px;
+        background: var(--o);
+        border: 0;
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.3s;
+        z-index: 60;
+        border-radius: 4px;
+      }
+      #top.v {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .rv {
+        opacity: 0;
+        transform: translateY(34px);
+        transition:
+          opacity 0.8s,
+          transform 0.8s;
+      }
+      .rv.in {
+        opacity: 1;
+        transform: none;
+      }
+      @media (max-width: 960px) {
+        .links {
+          position: fixed;
+          inset: 72px 0 auto;
+          flex-direction: column;
+          background: rgba(8, 8, 10, 0.97);
+          padding: 20px 24px;
+          gap: 16px;
+          transform: translateY(-130%);
+          transition: 0.3s;
+        }
+        .links.o {
+          transform: none;
+        }
+        #burger {
+          display: block;
+        }
+        nav .btn {
+          display: none;
+        }
+        .cards,
+        .proj,
+        .nums {
+          grid-template-columns: 1fr 1fr;
+        }
+        .g2,
+        .ct {
+          grid-template-columns: 1fr;
+        }
+        .code,
+        .avail,
+        .scr {
+          display: none;
+        }
+        .nums div:nth-child(3) {
+          border: 0;
+        }
+      }
+      @media (max-width: 560px) {
+        .cards,
+        .proj {
+          grid-template-columns: 1fr;
+        }
+        .sd {
+          padding: 0 6px;
+        }
+        .ar {
+          display: none;
+        }
+        form {
+          grid-template-columns: 1fr;
+        }
+        form .f {
+          grid-column: 1;
+        }
+        .chk {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+      }
+      section, main, .container-fluid {
+        background: transparent !important;
+        background-color: transparent !important;
+      }
+
+      /* 2. Saare cards aur boxes ko transparent glass jaisa banane ke liye */
+      div[class*="card"], div[class*="box"], .tech-stack, .project-item {
+        background: rgba(5, 5, 7, 0.2) !important;
+        backdrop-filter: blur(1px);
+        -webkit-backdrop-filter: blur(1px);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bg"></canvas>
+    <div id="veil"></div>
+    <div id="bar"></div>
+    <nav>
+      <div class="w">
+        <a href="#home" class="logo"><b>&lt;/&gt;</b> DADU</a>
+        <div class="links">
+          <a href="#home">HOME</a><a href="#about">ABOUT</a
+          ><a href="#services">SERVICES</a><a href="#skills">SKILLS</a
+          ><a href="#projects">PROJECTS</a><a href="#experience">EXPERIENCE</a
+          ><a href="#achievements">ACHIEVEMENTS</a
+          ><a href="#testimonials">TESTIMONIALS</a
+          ><a href="#contact">CONTACT</a>
+        </div>
+        <a href="#contact" class="btn">LET'S TALK ➤</a
+        ><button id="burger" aria-label="Menu">☰</button>
+      </div>
+    </nav>
+
+    <section id="home">
+      <div class="w" style="width: 100%">
+        <div class="rv">
+          <span class="tag">● FRONT-END DEVELOPER</span>
+          <h1>I build<br /><em>Fast. Bold.</em><br />Responsive.</h1>
+          <p class="lead">
+            I take projects from design handoff to live deployment — fast,
+            responsive React.js and Next.js apps in TypeScript and Tailwind CSS.
+          </p>
+          <div class="row">
+            <a href="#projects" class="btn">VIEW MY WORK →</a
+            ><a href="#contact" class="btn g">GET IN TOUCH ↓</a>
+          </div>
+          <div class="eb" style="margin-top: 34px; font-size: 11px">
+            Let's connect
+          </div>
+          <div class="soc">
+            <a href="https://github.com" target="_blank" rel="noopener">GH</a
+            ><a href="https://linkedin.com" target="_blank" rel="noopener">in</a
+            ><a href="#contact">@</a>
+          </div>
+        </div>
+      </div>
+      <div class="code">
+        <pre>
+const dev = {
+  name: "Devansh",
+  role: "Front-End Developer",
+  stack: "React · Next.js · TS",
+  code: "Clean, Scalable,
+         Performant"
+};</pre
+        >
+      </div>
+      <div class="avail"><small>AVAILABLE FOR</small>FREELANCE <i></i></div>
+      <div class="scr">SCROLL<i></i></div>
+    </section>
+
+    <section id="about" class="panel">
+      <div class="w g2">
+        <div class="xp rv">
+          <div>
+            <b data-n="3">0</b><span>+ YEARS OF<br />EXPERIENCE</span>
+          </div>
+        </div>
+        <div class="rv">
+          <div class="eb">About me</div>
+          <h2>Turning Ideas Into Powerful Digital Experiences</h2>
+          <p class="p">
+            Frontend Developer who takes projects from design handoff to live
+            deployment. Over 3+ years of freelance work, I've built fast,
+            responsive React.js and Next.js applications in TypeScript and
+            Tailwind CSS, including a full-stack e-commerce engine with
+            multi-attribute filtering and state-driven carts, and a mobile-first
+            fitness tracker with persistent daily goals. I connect frontends to
+            Node.js/Express REST APIs and ship through Git-based workflows on
+            Vercel and Netlify.
+          </p>
+          <p class="p" style="margin-top: 10px">
+            Because I work directly with clients, I'm used to owning the
+            outcome, not just the ticket. Now looking to bring that ownership to
+            a React/Next.js team working on a larger product.
+          </p>
+          <ul class="chk">
+            <li>Clean &amp; Semantic Code</li>
+            <li>Fully Responsive</li>
+            <li>Pixel Perfect Design</li>
+            <li>Great Communication</li>
+            <li>Performance Optimized</li>
+            <li>Git-based Workflows</li>
+          </ul>
+          <a href="#experience" class="btn g">MORE ABOUT ME →</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="w">
+        <div class="eb">Services</div>
+        <h2>What I Can Do For You</h2>
+        <div class="cards">
+          <div class="card rv">
+            <div class="ic">&lt;/&gt;</div>
+            <h3>UI/UX Implementation</h3>
+            <p>
+              Design handoff converted into pixel-perfect, component-driven
+              interfaces.
+            </p>
+          </div>
+          <div class="card rv">
+            <div class="ic">▯</div>
+            <h3>Responsive Design</h3>
+            <p>
+              Mobile-first layouts consistent across Chrome, Safari, Firefox and
+              mobile.
+            </p>
+          </div>
+          <div class="card rv">
+            <div class="ic">⌘</div>
+            <h3>Web Applications</h3>
+            <p>
+              React &amp; Next.js apps with Redux/Zustand state and REST API
+              integration.
+            </p>
+          </div>
+          <div class="card rv">
+            <div class="ic">⚡</div>
+            <h3>Performance Optimization</h3>
+            <p>
+              Code-splitting, lazy-loading and lean CSS for faster page loads.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="panel">
+      <div class="w">
+        <div class="eb">Tech Stack</div>
+        <h2>Technologies I Work With</h2>
+        <div class="tech rv">
+          <div><b style="color: #e44d26">5</b>HTML5</div>
+          <div><b style="color: #2965f1">3</b>CSS3</div>
+          <div><b style="color: #f7df1e">JS</b>JavaScript</div>
+          <div><b style="color: #3178c6">TS</b>TypeScript</div>
+          <div><b style="color: #61dafb">⚛</b>React</div>
+          <div><b>N</b>Next.js</div>
+          <div><b style="color: #38bdf8">≈</b>Tailwind</div>
+          <div><b style="color: #cd6799">S</b>SCSS</div>
+          <div><b style="color: #9b6bff">R</b>Redux</div>
+          <div><b style="color: #ff9f43">Z</b>Zustand</div>
+          <div><b style="color: #8cc84b">⬢</b>Node.js</div>
+          <div><b style="color: var(--o)">⎇</b>Git</div>
+        </div>
+        <div class="sk rv">
+          <div>
+            <strong>Languages</strong>JavaScript (ES6+), TypeScript, HTML5,
+            CSS3, SCSS
+          </div>
+          <div>
+            <strong>Frameworks &amp; Libraries</strong>React.js, Next.js (App
+            Router), Redux, Zustand, Tailwind CSS, Styled Components
+          </div>
+          <div>
+            <strong>Backend &amp; APIs</strong>Node.js, Express.js, REST API
+            design and integration
+          </div>
+          <div>
+            <strong>Tools &amp; Deployment</strong>Git, GitHub, Linux CLI, VS
+            Code, Chrome DevTools, Vercel, Netlify
+          </div>
+          <div>
+            <strong>Practices</strong>Responsive / mobile-first,
+            component-driven development, code-splitting, Agile
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="w">
+        <div class="hd">
+          <div>
+            <div class="eb">Selected Work</div>
+            <h2>Featured Projects</h2>
+          </div>
+        </div>
+        <div class="cards proj">
+          <div class="card rv">
+            <div class="im">
+              <img src="img/fitness.jpg" alt="Mobile Fitness Tracker" />
+            </div>
+            <div class="bd">
+              <h3>Mobile Fitness Tracker</h3>
+              <p>
+                Mobile-first web app for tracking daily goals, with data that
+                persists between sessions and smooth transitions between goals,
+                progress and daily views.
+              </p>
+              <div class="tg">
+                <span>Next.js</span><span>TypeScript</span
+                ><span>Tailwind CSS</span><span>Zustand</span>
+              </div>
+            </div>
+          </div>
+          <div class="card rv">
+            <div class="im">
+              <img src="img/store.jpg" alt="E-Commerce Engine" />
+            </div>
+            <div class="bd">
+              <h3>Full-Stack E-Commerce Engine</h3>
+              <p>
+                Responsive store with multi-attribute product filtering and a
+                state-driven cart, backed by Node.js/Express routes and faster
+                API queries.
+              </p>
+              <div class="tg">
+                <span>React</span><span>Node.js</span><span>Express</span
+                ><span>REST APIs</span>
+              </div>
+            </div>
+          </div>
+          <div class="card rv">
+            <div class="im">
+              <img src="img/portfolio - 1.png" alt="Developer Portfolio" />
+            </div>
+            <div class="bd">
+              <h3>Developer Portfolio Website</h3>
+              <p>
+                Lightweight, modular portfolio with strict responsive
+                breakpoints for phones, tablets and ultra-wide monitors.
+              </p>
+              <div class="tg">
+                <span>HTML5</span><span>CSS3</span><span>JavaScript ES6+</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience" class="panel">
+      <div class="w">
+        <div class="eb">Experience</div>
+        <h2>Professional Experience</h2>
+        <div class="tl rv">
+          <h3>Freelance Frontend Developer</h3>
+          <div class="m">Remote (Nagpur, India) · June 2022 – Present</div>
+          <ul>
+            <li>
+              Built and deployed multiple client websites and web apps,
+              including e-commerce, using React.js, Next.js (App Router),
+              TypeScript and Tailwind CSS, hosted on Vercel and Netlify.
+            </li>
+            <li>
+              Converted UI/UX designs into responsive, mobile-first interfaces
+              that behave consistently across Chrome, Safari, Firefox and mobile
+              browsers.
+            </li>
+            <li>
+              Improved page-load performance by code-splitting routes,
+              lazy-loading components and removing unused CSS with Tailwind.
+            </li>
+            <li>
+              Integrated Next.js frontends with Node.js/Express REST APIs,
+              managing data fetching, loading and error states, and app state
+              with Redux and Zustand.
+            </li>
+            <li>
+              Managed projects with Git and GitHub feature-branch workflows and
+              Linux CLI, keeping staging deployments clean before client
+              release.
+            </li>
+            <li>
+              Worked directly with clients on requirements, timelines and
+              delivery, owning each project end to end.
+            </li>
+          </ul>
+        </div>
+        <p class="edu rv">
+          <b>Education:</b> Bachelor of Commerce (Computer Application) — Kamla
+          Nehru Mahavidyalaya, Nagpur · 2021
+        </p>
+      </div>
+    </section>
+
+    <section id="achievements">
+      <div class="w">
+        <div class="eb">Achievements</div>
+        <h2>Numbers That Define Me</h2>
+        <div class="nums panel rv" style="padding: 30px 0; border-radius: 8px">
+          <div>
+            <b data-n="3" data-s="+">0</b><span>Years Freelancing</span>
+          </div>
+          <div><b data-n="3">0</b><span>Featured Projects</span></div>
+          <div>
+            <b data-n="20" data-s="+">0</b><span>Technologies Used</span>
+          </div>
+          <div>
+            <b data-n="2">0</b
+            ><span>Deploy Platforms<br />Vercel &amp; Netlify</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials" class="panel">
+      <div class="w">
+        <div class="eb">Working Together</div>
+        <h2>How I Work</h2>
+        <div class="sl">
+          <button class="ar" style="left: 0" data-d="-1">◀</button
+          ><button class="ar" style="right: 0" data-d="1">▶</button>
+          <div class="tr">
+            <div class="sd">
+              <div class="q">
+                <p>
+                  "I own the outcome, not just the ticket — from requirements
+                  and timelines to final delivery."
+                </p>
+                <small>END-TO-END OWNERSHIP</small>
+              </div>
+            </div>
+            <div class="sd">
+              <div class="q">
+                <p>
+                  "Design handoff to live deployment, with clean Git workflows
+                  and staging kept tidy before every client release."
+                </p>
+                <small>CLEAN DELIVERY</small>
+              </div>
+            </div>
+            <div class="sd">
+              <div class="q">
+                <p>
+                  "Fast, responsive, mobile-first interfaces — optimized with
+                  code-splitting, lazy-loading and lean CSS."
+                </p>
+                <small>PERFORMANCE FIRST</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dots"><i></i><i></i><i></i></div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="w ct">
+        <div class="rv">
+          <div class="eb">Contact</div>
+          <h2 style="margin-bottom: 0">Let's Build Something Amazing</h2>
+          <div class="ci">
+            <div><b>EMAIL</b>hello@dadu.dev</div>
+            <div><b>LOCATION</b>Nagpur, India</div>
+            <div>
+              <b>AVAILABILITY</b>Open for Freelance &amp; Full-time
+              React/Next.js roles <span style="color: #3ddc84">●</span>
+            </div>
+          </div>
+        </div>
+        <form class="rv" id="f">
+          <input placeholder="Your Name" name="n" required /><input
+            type="email"
+            placeholder="Your Email"
+            name="e"
+            required
+          /><input class="f" placeholder="Subject" name="s" /><textarea
+            class="f"
+            placeholder="Your Message"
+            name="m"
+            required
+          ></textarea
+          ><button class="btn f" style="justify-content: center">
+            SEND MESSAGE ➤
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <footer>
+      <div class="w">
+        <div>
+          <div class="logo" style="color: #fff"><b>&lt;/&gt;</b> DEVANSH</div>
+          <p style="margin-top: 8px; max-width: 260px">
+            Crafting fast, bold and beautiful web experiences that make an
+            impact.
+          </p>
+        </div>
+        <div>
+          <h4>QUICK LINKS</h4>
+          <a href="#home">Home</a><a href="#about">About</a
+          ><a href="#services">Services</a><a href="#projects">Projects</a
+          ><a href="#contact">Contact</a>
+        </div>
+        <div>
+          <h4>FOLLOW ME</h4>
+          <a href="https://github.com" target="_blank" rel="noopener">GitHub</a
+          ><a href="https://linkedin.com" target="_blank" rel="noopener"
+            >LinkedIn</a
+          >
+        </div>
+      </div>
+    </footer>
+    <button id="top" aria-label="Back to top">▲</button>
+
+    <script>
+      (() => {
+        const N = 238,
+          $ = (s) => document.querySelector(s),
+          $$ = (s) => [...document.querySelectorAll(s)];
+        const cv = $("#bg"),
+          cx = cv.getContext("2d"),
+          im = [];
+        let cur = 0,
+          tgt = 0,
+          last = -1;
+        const sz = () => {
+          const d = Math.min(devicePixelRatio || 1, 2);
+          cv.width = innerWidth * d;
+          cv.height = innerHeight * d;
+          last = -1;
+        };
+        const ok = (i) => i && i.complete && i.naturalWidth;
+        function draw(k) {
+          let i = im[k];
+          if (!ok(i)) {
+            i = null;
+            for (let d = 1; d < N && !i; d++) {
+              const a = im[k - d],
+                b = im[k + d];
+              if (ok(a)) i = a;
+              else if (ok(b)) i = b;
+            }
+          }
+          if (!i) return;
+          const s = Math.max(
+              cv.width / i.naturalWidth,
+              cv.height / i.naturalHeight,
+            ),
+            w = i.naturalWidth * s,
+            h = i.naturalHeight * s;
+          cx.drawImage(i, (cv.width - w) / 2, (cv.height - h) / 2, w, h);
+          last = k;
+        }
+        const ld = (i) =>
+          new Promise((r) => {
+            const g = new Image();
+            g.onload = g.onerror = r;
+            g.src = `frames/frame_${String(i + 1).padStart(6, "0")}.webp`;
+            im[i] = g;
+          });
+        const nav = $("nav"),
+          bar = $("#bar"),
+          top = $("#top");
+        function sc() {
+          const m = document.documentElement.scrollHeight - innerHeight,
+            p = m > 0 ? Math.min(Math.max(scrollY / m, 0), 1) : 0;
+          tgt = p * (N - 1);
+          bar.style.width = p * 100 + "%";
+          nav.classList.toggle("s", scrollY > 40);
+          top.classList.toggle("v", scrollY > 600);
+        }
+        (function t() {
+          cur += (tgt - cur) * 0.1;
+          if (Math.abs(tgt - cur) < 0.001) cur = tgt;
+          const k = Math.round(cur);
+          if (k !== last) draw(k);
+          requestAnimationFrame(t);
+        })();
+        (async () => {
+          sz();
+          await ld(0);
+          draw(0);
+          sc();
+          for (let i = 1; i < N; i += 8)
+            await Promise.all(
+              Array.from({ length: Math.min(8, N - i) }, (_, k) => ld(i + k)),
+            );
+        })();
+        addEventListener("scroll", sc, { passive: true });
+        addEventListener("resize", () => {
+          sz();
+          sc();
+        });
+        top.onclick = () => scrollTo({ top: 0 });
+        // menu
+        const L = $(".links");
+        $("#burger").onclick = () => L.classList.toggle("o");
+        L.onclick = () => L.classList.remove("o");
+        // reveal + counters + active link
+        const io = new IntersectionObserver(
+          (es) =>
+            es.forEach((e) => {
+              if (!e.isIntersecting) return;
+              e.target.classList.add("in");
+              e.target.querySelectorAll("[data-n]").forEach((c) => {
+                const n = +c.dataset.n,
+                  s = c.dataset.s || "",
+                  t0 = performance.now();
+                (function f(t) {
+                  const p = Math.min((t - t0) / 1400, 1);
+                  c.textContent = Math.round(n * (1 - Math.pow(1 - p, 3))) + s;
+                  if (p < 1) requestAnimationFrame(f);
+                })(t0);
+              });
+              io.unobserve(e.target);
+            }),
+          { threshold: 0.2 },
+        );
+        $$(".rv").forEach((e) => io.observe(e));
+        const secs = $$("section"),
+          as = $$(".links a");
+        new IntersectionObserver(
+          (es) =>
+            es.forEach((e) => {
+              if (e.isIntersecting)
+                as.forEach((a) =>
+                  a.classList.toggle("on", a.hash === "#" + e.target.id),
+                );
+            }),
+          { rootMargin: "-45% 0px -50% 0px" },
+        ).observe &&
+          secs.forEach((s) =>
+            new IntersectionObserver(
+              (es) =>
+                es.forEach((e) => {
+                  if (e.isIntersecting)
+                    as.forEach((a) =>
+                      a.classList.toggle("on", a.hash === "#" + e.target.id),
+                    );
+                }),
+              { rootMargin: "-45% 0px -50% 0px" },
+            ).observe(s),
+          );
+        // slider
+        let si = 0,
+          tm;
+        const tr = $(".tr"),
+          ds = $$(".dots i");
+        const go = (n) => {
+          si = (n + 3) % 3;
+          tr.style.transform = `translateX(${-si * 100}%)`;
+          ds.forEach((d, i) => d.classList.toggle("on", i === si));
+        };
+        $$(".ar").forEach(
+          (b) =>
+            (b.onclick = () => {
+              go(si + +b.dataset.d);
+              auto();
+            }),
+        );
+        ds.forEach(
+          (d, i) =>
+            (d.onclick = () => {
+              go(i);
+              auto();
+            }),
+        );
+        const auto = () => {
+          clearInterval(tm);
+          tm = setInterval(() => go(si + 1), 5000);
+        };
+        go(0);
+        auto();
+        // form -> mailto
+        $("#f").onsubmit = (e) => {
+          e.preventDefault();
+          const f = e.target;
+          location.href = `mailto:hello@devansh.dev?subject=${encodeURIComponent(f.s.value || "Portfolio enquiry")}&body=${encodeURIComponent(f.m.value + "\n\n— " + f.n.value + " (" + f.e.value + ")")}`;
+        };
+      })();
+    </script>
+  </body>
+</html>
